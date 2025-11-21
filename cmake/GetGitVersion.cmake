@@ -4,7 +4,8 @@ find_package(Git REQUIRED)
 
 macro(_export_git_version)
     string(JOIN "-" _git_ver_str ${_git_ver_major} ${_git_ver_minor} ${_git_ver_build} ${_git_ver_tail})
-    string(JOIN "." _git_ver_sem ${_git_ver_major} ${_git_ver_minor} ${_git_ver_build} ${_git_ver_tail})
+    string(JOIN "." _git_ver_sem ${_git_ver_major} ${_git_ver_minor} ${_git_ver_build})
+    string(JOIN "-" _git_ver_sem ${_git_ver_sem} ${_git_ver_tail})
 
     set(GIT_VER_SEM "v${_git_ver_sem}" PARENT_SCOPE)
     set(GIT_VER_STR "${_git_ver_str}" PARENT_SCOPE)
@@ -14,7 +15,7 @@ macro(_export_git_version)
     set(GIT_VER_TAIL "${_git_ver_tail}" PARENT_SCOPE)
     if(_git_commit_count)
         set(GIT_COMMIT_COUNT ${_git_commit_count} PARENT_SCOPE)
-        set(GIT_VER_SEM "v${_git_ver_str}+${_git_commit_count}" PARENT_SCOPE)
+        set(GIT_VER_SEM "v${_git_ver_sem}+${_git_commit_count}" PARENT_SCOPE)
     endif()
 
     message(VERBOSE "GIT_VER_STR: ${_git_ver_str}")
