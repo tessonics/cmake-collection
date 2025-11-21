@@ -4,8 +4,9 @@ find_package(Git REQUIRED)
 
 macro(_export_git_version)
     string(JOIN "-" _git_ver_str ${_git_ver_major} ${_git_ver_minor} ${_git_ver_build} ${_git_ver_tail})
+    string(JOIN "." _git_ver_sem ${_git_ver_major} ${_git_ver_minor} ${_git_ver_build} ${_git_ver_tail})
 
-    set(GIT_VER_SEM "v${_git_ver_str}" PARENT_SCOPE)
+    set(GIT_VER_SEM "v${_git_ver_sem}" PARENT_SCOPE)
     set(GIT_VER_STR "${_git_ver_str}" PARENT_SCOPE)
     set(GIT_VER_MAJOR ${_git_ver_major} PARENT_SCOPE)
     set(GIT_VER_MINOR ${_git_ver_minor} PARENT_SCOPE)
