@@ -1,0 +1,21 @@
+#pragma once
+
+#define APP_PRODUCT_NAME "@APP_PRODUCT_NAME@"
+#define PROJECTION_COMPANY_NAME "@APP_COMPANY_NAME@"
+#define APP_COPYRIGHT "@APP_COPYRIGHT@"
+#define APP_COMPANY_URL "@APP_COMPANY_URL@"
+#define APP_SUPPORT_URL "@APP_SUPPORT_URL@"
+
+// string formed from git tag
+#define GIT_VER_SEMANTIC "@GIT_VER_SEMANTIC@"
+
+// comma-separated integers: #,#,#,#
+#define GIT_VER_NNNN "@GIT_VER_NNNN@"
+
+#define BUILD_TIMESTAMP_RFC "@BUILD_TIMESTAMP_RFC@"
+#define BUILD_TIMESTAMP_HR "@BUILD_TIMESTAMP_HR@"
+
+#define GIT_AUTHOR_DATE "@GIT_AUTHOR_DATE@"
+
+#define GIT_LONG_HASH "@GIT_LONG_HASH@"
+#define GIT_SHORT_HASH "@GIT_SHORT_HASH@"

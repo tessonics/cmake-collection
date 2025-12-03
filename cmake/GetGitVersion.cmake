@@ -83,9 +83,6 @@ endmacro()
 #
 # BUILD_TIMESTAMP_HR
 #   contains the build timestamp in a human readable format, expressed in Coordinated Universal Time (UTC).
-BUILD_TIMESTAMP_HR
-Stores the configuration timestamp in a human-readable format.
-
 function (get_git_version_info)
     set(options "INCLUDE_COMMIT_COUNT")
     cmake_parse_arguments(_get_git_version "${options}" "" ""  ${ARGN})
