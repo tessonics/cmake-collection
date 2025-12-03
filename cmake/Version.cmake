@@ -45,7 +45,7 @@ function(make_version)
         "${_output_folder}/${_output_file}"
     )
 
-    if(NOT _make_version_DISABLE_INCLUDE_DIRECTORY and _make_version_TARGET)
+    if(NOT _make_version_DISABLE_INCLUDE_DIRECTORY AND _make_version_TARGET)
         target_include_directories(${_make_version_TARGET} PUBLIC "${_output_folder}")
     endif()
     message(STATUS "${_make_version_TARGET}: product version ${GIT_VER_SEMANTIC}")
