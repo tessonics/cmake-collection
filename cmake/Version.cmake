@@ -1,8 +1,20 @@
 ## make_version
 # This function generates a version header file for a given target.
 #
-# Arguments:
+# Parameters:
 #   target_name: The name of the target for which the version header will be generated.
+#
+# Arguments:
+#   OUTPUT_FOLDER: folder to where the generated version header file should be saved defaults to
+#                   ${CMAKE_CURRENT_BINARY_DIR}
+#
+#   OUTPUT_FILE: filename that the generated version header file should have defaults to
+#                   ${target_name}_version.h
+#
+# Options:
+#   FORCE_RUN_GETGITVERSION - If set GetGitVersion runs whether it already run or not
+#
+#   DISABLE_INCLUDE_DIRECTORY - If set the OUTPUT_FOLDER will not be set as an include directory
 function(make_version target_name)
     set(options FORCE_RUN_GETGITVERSION DISABLE_INCLUDE_DIRECTORY)
     set(oneValueArgs OUTPUT_FOLDER OUTPUT_FILE)
@@ -33,7 +45,7 @@ function(make_version target_name)
     )
 
     if(NOT _make_version_DISABLE_INCLUDE_DIRECTORY)
-        target_include_directories(${target_name} PUBLIC "${CMAKE_CURRENT_BINARY_DIR}")
+        target_include_directories(${target_name} PUBLIC "${_output_folder}")
     endif()
     message(STATUS "${target_name}: product version ${GIT_VER_SEMANTIC}")
 endfunction()

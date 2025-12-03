@@ -120,7 +120,21 @@ Generates a `version.h` header file for a specific target in the `CMAKE_CURRENT_
 The `CMAKE_CURRENT_BINARY_DIR` is also added as an include_directory to the specified target.
 The file will be named to `${target_name}_version.h`
 
+```cmake
+make_version(
+    <target_name>
+    [FORCE_RUN_GET_GITVERSION]
+    [DISABLE_INCLUDE_DIRECTORY]
+    [OUTPUT_FOLDER path]
+    [OUTPUT_FILE path])
+```
+
 ### Arguments
-| Parameter |Description |
-| -- | -- |
-| target_name | The target for which a version header file should be generated
+
+| Parameter                 | Description                                                                                                        |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| target_name               | The target for which a version header file should be generated                                                     |
+| FORCE_RUN_GET_GITVERSION  | If set GetGitVersion runs whether it already run or not                                                            |
+| DISABLE_INCLUDE_DIRECTORY | If set the OUTPUT_FOLDER will not be set as an include directory                                                   |
+| OUTPUT_FOLDER             | Sets the folder to where the generated version header file will be saved defaults to `${CMAKE_CURRENT_BINARY_DIR}` |
+| OUTPUT_FILE               | Sets the file name for the generated version header file defaults to `${target_name}_version.h`                    |
