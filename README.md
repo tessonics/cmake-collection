@@ -35,15 +35,17 @@ any prefix will be ignored
 
 ### Output
 
-| Variable          | Description                                                                                                                                                                                                                                                                            |
-| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| GIT_VERSION_MAJOR | Major number extracted from git tag.                                                                                                                                                                                                                                                   |
-| GIT_VERSION_MINOR | Minor number extracted from git tag.                                                                                                                                                                                                                                                   |
-| GIT_VERSION_BUILD | Build number extracted from git tag.                                                                                                                                                                                                                                                   |
-| GIT_VERSION_TAIL  | Tail extracted from git tag.                                                                                                                                                                                                                                                           |
-| GIT_VER_STR       | Human readable version string constructed from the parsed components, compounded with a `-` Format: `<major>-<minor>-<patch>[-<tail>]`.                                                                                                                                                |
-| GIT_VER_SEM       | A semantic version compatible version string constructed from the parsed components, compound with a `.`.<br>If `INCLUDE_COMMIT_COUNT` is enabled the version string will also contain the number of additional commits. Format: `v<major>.<minor>.<patch>[-<tail>][+<commit_count>]`. |
-| GIT_COMMIT_COUNT  | Contains the additional commits since the last version tag. Only set if called with the OPTION `INCLUDE_COMMIT_COUNT` and the number of additional commits is greater then 0.                                                                                                          |
+| Variable            | Description                                                                                                                                                                                                                                                                            |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| GIT_VERSION_MAJOR   | Major number extracted from git tag.                                                                                                                                                                                                                                                   |
+| GIT_VERSION_MINOR   | Minor number extracted from git tag.                                                                                                                                                                                                                                                   |
+| GIT_VERSION_BUILD   | Build number extracted from git tag.                                                                                                                                                                                                                                                   |
+| GIT_VERSION_TAIL    | Tail extracted from git tag.                                                                                                                                                                                                                                                           |
+| GIT_VER_STR         | Human readable version string constructed from the parsed components, compounded with a `-` Format: `<major>-<minor>-<patch>[-<tail>]`.                                                                                                                                                |
+| GIT_VER_SEM         | A semantic version compatible version string constructed from the parsed components, compound with a `.`.<br>If `INCLUDE_COMMIT_COUNT` is enabled the version string will also contain the number of additional commits. Format: `v<major>.<minor>.<patch>[-<tail>][+<commit_count>]`. |
+| GIT_COMMIT_COUNT    | Contains the additional commits since the last version tag. Only set if called with the OPTION `INCLUDE_COMMIT_COUNT` and the number of additional commits is greater then 0.                                                                                                          |
+| BUILD_TIMESTAMP_RFC | Contains the build timestamp in RFC-3339 format, expressed in Coordinated Universal Time (UTC).                                                                                                                                                                                        |
+| BUILD_TIMESTAMP_HR  | Contains the build timestamp in a human readable format, expressed in Coordinated Universal Time (UTC).                                                                                                                                                                                |
 
 ### Example usage:
 
@@ -53,15 +55,16 @@ get_git_version_info()
 ```
 
 If the latest tag would be `v1.5.2-beta` the output would be the following:
-| Variable          | Value       |
+| Variable | Value |
 | ----------------- | ----------- |
-| GIT_VERSION_MAJOR | 1           |
-| GIT_VERSION_MINOR | 5           |
-| GIT_VERSION_BUILD | 2           |
-| GIT_VERSION_TAIL  | beta        |
-| GIT_VER_STR       | 1-5-2-beta  |
-| GIT_VER_SEM       | v1.5.2-beta |
-
+| GIT_VERSION_MAJOR | 1 |
+| GIT_VERSION_MINOR | 5 |
+| GIT_VERSION_BUILD | 2 |
+| GIT_VERSION_TAIL | beta |
+| GIT_VER_STR | 1-5-2-beta |
+| GIT_VER_SEM | v1.5.2-beta |
+| BUILD_TIMESTAMP_RFC | 1970-01-01T00:00:00Z |
+| BUILD_TIMESTAMP_HR | 1970-01-01 00:00:00 UTC |
 
 ```cmake
 include(cmake/GetGitVersion.cmake)
@@ -69,13 +72,14 @@ get_git_version_info(INCLUDE_COMMIT_COUNT)
 ```
 
 If the latest tag would be `v1.5.2-beta` the output would be the following:
-| Variable          | Value          |
+| Variable | Value |
 | ----------------- | -------------- |
-| GIT_VERSION_MAJOR | 1              |
-| GIT_VERSION_MINOR | 5              |
-| GIT_VERSION_BUILD | 2              |
-| GIT_VERSION_TAIL  | beta           |
-| GIT_COMMIT_COUNT  | 10             |
-| GIT_VER_STR       | 1-5-2-beta     |
-| GIT_VER_SEM       | v1.5.2-beta+10 |
-
+| GIT_VERSION_MAJOR | 1 |
+| GIT_VERSION_MINOR | 5 |
+| GIT_VERSION_BUILD | 2 |
+| GIT_VERSION_TAIL | beta |
+| GIT_COMMIT_COUNT | 10 |
+| GIT_VER_STR | 1-5-2-beta |
+| GIT_VER_SEM | v1.5.2-beta+10 |
+| BUILD_TIMESTAMP_RFC | 1970-01-01T00:00:00Z |
+| BUILD_TIMESTAMP_HR | 1970-01-01 00:00:00 UTC |

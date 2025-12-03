@@ -6,6 +6,8 @@ macro(_export_git_version)
     string(JOIN "-" _git_ver_str ${_git_ver_major} ${_git_ver_minor} ${_git_ver_build} ${_git_ver_tail})
     string(JOIN "." _git_ver_sem ${_git_ver_major} ${_git_ver_minor} ${_git_ver_build})
     string(JOIN "-" _git_ver_sem ${_git_ver_sem} ${_git_ver_tail})
+    string(TIMESTAMP _build_timestamp_rfc UTC)
+    string(TIMESTAMP _build_timestamp_hr "%Y-%m-%d %H:%M:%S UTC" UTC)
 
     set(GIT_VER_SEM "v${_git_ver_sem}" PARENT_SCOPE)
     set(GIT_VER_STR "${_git_ver_str}" PARENT_SCOPE)
@@ -13,6 +15,8 @@ macro(_export_git_version)
     set(GIT_VER_MINOR ${_git_ver_minor} PARENT_SCOPE)
     set(GIT_VER_BUILD ${_git_ver_build} PARENT_SCOPE)
     set(GIT_VER_TAIL "${_git_ver_tail}" PARENT_SCOPE)
+    set(BUILD_TIMESTAMP_RFC ${_build_timestamp_rfc} PARENT_SCOPE)
+    set(BUILD_TIMESTAMP_HR ${_build_timestamp_hr} PARENT_SCOPE)
     if(_git_commit_count)
         set(GIT_COMMIT_COUNT ${_git_commit_count} PARENT_SCOPE)
         set(GIT_VER_SEM "v${_git_ver_sem}+${_git_commit_count}" PARENT_SCOPE)
@@ -39,7 +43,7 @@ endmacro()
 # **Options**
 #
 # INCLUDE_COMMIT_COUNT
-#   When provided, the function additionally gets the number of commits ahead of the 
+#   When provided, the function additionally gets the number of commits ahead of the
 #   version tag and exports it as `GIT_COMMIT_COUNT`. Additional the commits will be added
 #   to the `GIT_VER_SEM`
 #   If the commit count cannot be obtained or is 0, the variable is left unset.
@@ -73,6 +77,15 @@ endmacro()
 # GIT_COMMIT_COUNT
 #   number of the commits since the last version tag, only set with the option INCLUDE_COMMIT_COUNT
 #   and additional commits existing
+#
+# BUILD_TIMESTAMP_RFC
+#   contains the build timestamp in RFC-3339 format, expressed in Coordinated Universal Time (UTC).
+#
+# BUILD_TIMESTAMP_HR
+#   contains the build timestamp in a human readable format, expressed in Coordinated Universal Time (UTC).
+BUILD_TIMESTAMP_HR
+Stores the configuration timestamp in a human-readable format.
+
 function (get_git_version_info)
     set(options "INCLUDE_COMMIT_COUNT")
     cmake_parse_arguments(_get_git_version "${options}" "" ""  ${ARGN})
@@ -99,11 +112,11 @@ function (get_git_version_info)
         return()
     endif()
 
-    # matches 
+    # matches
     # 0.0.0
     # 0.0.0-anytext
     # there can be anytext before the version
-    string(REGEX MATCH "([0-9]+)\\.([0-9]+)\\.([0-9]+)(-(.+))?" _tag_match "${_git_describe}")        
+    string(REGEX MATCH "([0-9]+)\\.([0-9]+)\\.([0-9]+)(-(.+))?" _tag_match "${_git_describe}")
     # no valid version found, use default values
     if (NOT _tag_match)
         _export_git_version()
