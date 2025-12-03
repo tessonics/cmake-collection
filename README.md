@@ -4,10 +4,11 @@ A loose collection of cmake scripts used by different departments
 
 The idea is to have a place where we can loosely collect any cmake script that can be reused by any software we have or create
 
-| CMake Module                        | Description                             |
-| ----------------------------------- | --------------------------------------- |
-| [AddGitSubmodule](#addgitsubmodule) | Adds a Git submodule directory to cmake |
-| [GetGitVersion](#getgitversion)     | Parses the most recent git tag          |
+| CMake Module                        | Description                                        |
+| ----------------------------------- | -------------------------------------------------- |
+| [AddGitSubmodule](#addgitsubmodule) | Adds a Git submodule directory to cmake            |
+| [GetGitVersion](#getgitversion)     | Parses the most recent git tag                     |
+| [Version](#version)                 | Generates a version header file for a given target |
 
 ## AddGitSubmodule
 
@@ -60,17 +61,17 @@ get_git_version_info()
 ```
 
 If the latest tag would be `v1.5.2-beta` and since then 10 additional commits where added the output would be the following:
-| Variable            | Value                   |
+| Variable | Value |
 | ------------------- | ----------------------- |
-| GIT_VERSION_MAJOR   | 1                       |
-| GIT_VERSION_MINOR   | 5                       |
-| GIT_VERSION_PATCH   | 2                       |
-| GIT_VERSION_TAIL    | beta                    |
-| GIT_VERSION_BUILD   | 20010                   |
-| GIT_VER_STR         | 1-5-2-beta              |
-| GIT_VER_SEM         | v1.5.2-beta             |
-| BUILD_TIMESTAMP_RFC | 1970-01-01T00:00:00Z    |
-| BUILD_TIMESTAMP_HR  | 1970-01-01 00:00:00 UTC |
+| GIT_VERSION_MAJOR | 1 |
+| GIT_VERSION_MINOR | 5 |
+| GIT_VERSION_PATCH | 2 |
+| GIT_VERSION_TAIL | beta |
+| GIT_VERSION_BUILD | 20010 |
+| GIT_VER_STR | 1-5-2-beta |
+| GIT_VER_SEM | v1.5.2-beta |
+| BUILD_TIMESTAMP_RFC | 1970-01-01T00:00:00Z |
+| BUILD_TIMESTAMP_HR | 1970-01-01 00:00:00 UTC |
 
 ```cmake
 include(cmake/GetGitVersion.cmake)
@@ -78,18 +79,18 @@ get_git_version_info(INCLUDE_COMMIT_COUNT)
 ```
 
 If the latest tag would be `v1.5.2-beta` and since then 10 additional commits where added the output would be the following:
-| Variable            | Value                   |
+| Variable | Value |
 | ------------------- | ----------------------- |
-| GIT_VERSION_MAJOR   | 1                       |
-| GIT_VERSION_MINOR   | 5                       |
-| GIT_VERSION_PATCH   | 2                       |
-| GIT_VERSION_TAIL    | beta                    |
-| GIT_VERSION_BUILD   | 20010                   |
-| GIT_COMMIT_COUNT    | 10                      |
-| GIT_VER_STR         | 1-5-2-beta              |
-| GIT_VER_SEM         | v1.5.2-beta+10          |
-| BUILD_TIMESTAMP_RFC | 1970-01-01T00:00:00Z    |
-| BUILD_TIMESTAMP_HR  | 1970-01-01 00:00:00 UTC |
+| GIT_VERSION_MAJOR | 1 |
+| GIT_VERSION_MINOR | 5 |
+| GIT_VERSION_PATCH | 2 |
+| GIT_VERSION_TAIL | beta |
+| GIT_VERSION_BUILD | 20010 |
+| GIT_COMMIT_COUNT | 10 |
+| GIT_VER_STR | 1-5-2-beta |
+| GIT_VER_SEM | v1.5.2-beta+10 |
+| BUILD_TIMESTAMP_RFC | 1970-01-01T00:00:00Z |
+| BUILD_TIMESTAMP_HR | 1970-01-01 00:00:00 UTC |
 
 ### GIT_VERSION_BUILD
 
@@ -112,3 +113,14 @@ Examples:
 - v1.0.0-rc.5 -> 30500
 - v1.0.0 -> 50000
 - v1.0.0.5 -> 50500
+
+## Version
+
+Generates a `version.h` header file for a specific target in the `CMAKE_CURRENT_BINARY_DIR` directory.
+The `CMAKE_CURRENT_BINARY_DIR` is also added as an include_directory to the specified target.
+The file will be named to `${target_name}_version.h`
+
+### Arguments
+| Parameter |Description |
+| -- | -- |
+| target_name | The target for which a version header file should be generated
