@@ -48,6 +48,8 @@ any prefix will be ignored
 | GIT_VER_NNNN        | Contains the Major Minor Patch Build as a comma separated string                                                                                                                                                                                                                       |
 | BUILD_TIMESTAMP_RFC | Contains the build timestamp in RFC-3339 format, expressed in Coordinated Universal Time (UTC).                                                                                                                                                                                        |
 | BUILD_TIMESTAMP_HR  | Contains the build timestamp in a human readable format, expressed in Coordinated Universal Time (UTC).                                                                                                                                                                                |
+| GIT_LONG_HASH       | The long hash of the last commit                                                                                                                                                                                                                                                       |
+| GIT_SHORT_HASH      | The short hash of the last commit                                                                                                                                                                                                                                                      |
 
 ### Example usage:
 

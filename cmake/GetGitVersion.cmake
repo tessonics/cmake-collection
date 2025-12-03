@@ -10,9 +10,6 @@ macro(_export_git_version)
     string(TIMESTAMP _build_timestamp_rfc UTC)
     string(TIMESTAMP _build_timestamp_hr "%Y-%m-%d %H:%M:%S UTC" UTC)
 
-    # git rev-parse HEAD
-    # git rev-parse --short HEAD
-
     set(GIT_VER_SEM "v${_git_ver_sem}" PARENT_SCOPE)
     set(GIT_VER_STR "${_git_ver_str}" PARENT_SCOPE)
 
@@ -21,6 +18,9 @@ macro(_export_git_version)
     set(GIT_VER_PATCH ${_git_ver_patch} PARENT_SCOPE)
     set(GIT_VER_TAIL "${_git_ver_tail}" PARENT_SCOPE)
     set(GIT_VER_BUILD "${_git_ver_build}" PARENT_SCOPE)
+
+    set(GIT_LONG_HASH "${_git_long_hash}" PARENT_SCOPE)
+    set(GIT_SHORT_HASH "${_git_short_hash}" PARENT_SCOPE)
 
     if(_git_commit_count)
         set(GIT_COMMIT_COUNT ${_git_commit_count} PARENT_SCOPE)
@@ -40,6 +40,9 @@ macro(_export_git_version)
     message(VERBOSE "GIT_VER_PATCH: ${_git_ver_patch}")
     message(VERBOSE "GIT_VER_TAIL: ${_git_ver_tail}")
     message(VERBOSE "GIT_VER_BUILD: ${_git_ver_build}")
+
+    message(VERBOSE "GIT_LONG_HASH: ${_git_long_hash}")
+    message(VERBOSE "GIT_SHORT_HASH: ${_git_short_hash}")
 
     message(VERBOSE "BUILD_TIMESTAMP_RFC: ${_build_timestamp_rfc}")
     message(VERBOSE "BUILD_TIMESTAMP_HR: ${_build_timestamp_hr}")
@@ -86,13 +89,10 @@ function(_git_makequad _git_ver_tail _git_additional_commits)
     string(REGEX MATCH "(([A-Za-z]+)\\.)?([0-9]+)" _tag_match "${_git_ver_tail}")
 
     if(NOT _tag_match)
-        message(WARNING "NOTAG: ${_git_ver_tail}")
         MATH(EXPR _build_quad "${_release_base} + ${_git_additional_commits}" )
         set(_git_ver_build "${_build_quad}" PARENT_SCOPE)
         return()
     endif()
-    message(WARNING "blub")
-
 
     if("${CMAKE_MATCH_3}" STREQUAL "")
         set(_build "0")
@@ -147,6 +147,42 @@ function(_get_git_additional_commits _git_tag)
     endif()
 
     set(_git_commit_count "${_git_commit_count}" PARENT_SCOPE)
+endfunction()
+
+## _get_git_hash
+# Internal function
+#   Gets the short and long hash of the last commit
+#
+# Output
+#   _git_long_hash  - the long hash
+#   _git_short_hash - the short hash
+function(_get_git_hash)
+    execute_process(
+        COMMAND git rev-parse HEAD
+        WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
+        OUTPUT_VARIABLE _git_long_hash
+        RESULT_VARIABLE _exit_code
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+
+    if(NOT ("${_exit_code}" EQUAL "0"))
+        message(WARNING "could not get hash git failed with exit code ${_exit_code}")
+    endif()
+
+    execute_process(
+        COMMAND git rev-parse --short HEAD
+        WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
+        OUTPUT_VARIABLE _git_short_hash
+        RESULT_VARIABLE _exit_code
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+
+    if(NOT ("${_exit_code}" EQUAL "0"))
+        message(WARNING "could not get hash git failed with exit code ${_exit_code}")
+    endif()
+
+    set(_git_long_hash "${_git_long_hash}" PARENT_SCOPE)
+    set(_git_short_hash "${_git_short_hash}" PARENT_SCOPE)
 endfunction()
 
 ## get_git_version_info
@@ -247,6 +283,7 @@ function (get_git_version_info)
 
     _get_git_additional_commits("${_git_describe}")
     _git_makequad("${_git_ver_tail}" "${_git_commit_count}")
+    _get_git_hash()
 
    _export_git_version()
 endfunction()
