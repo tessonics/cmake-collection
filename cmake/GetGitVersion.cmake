@@ -22,15 +22,15 @@ macro(_export_git_version)
     set(GIT_LONG_HASH "${_git_long_hash}" PARENT_SCOPE)
     set(GIT_SHORT_HASH "${_git_short_hash}" PARENT_SCOPE)
 
+    set(GIT_AUTHOR_DATE "${_git_author_date}" PARENT_SCOPE)
+
     if(_git_commit_count)
         set(GIT_COMMIT_COUNT ${_git_commit_count} PARENT_SCOPE)
         set(GIT_VER_SEM "v${_git_ver_sem}+${_git_commit_count}" PARENT_SCOPE)
     endif()
 
-
     set(BUILD_TIMESTAMP_RFC ${_build_timestamp_rfc} PARENT_SCOPE)
     set(BUILD_TIMESTAMP_HR ${_build_timestamp_hr} PARENT_SCOPE)
-
 
     message(VERBOSE "GIT_VER_SEM: ${_git_ver_sem}")
     message(VERBOSE "GIT_VER_STR: ${_git_ver_str}")
@@ -46,6 +46,8 @@ macro(_export_git_version)
 
     message(VERBOSE "BUILD_TIMESTAMP_RFC: ${_build_timestamp_rfc}")
     message(VERBOSE "BUILD_TIMESTAMP_HR: ${_build_timestamp_hr}")
+
+    message(VERBOSE "GIT_AUTHOR_DATE: ${_git_author_date}")
 endmacro()
 
 
@@ -185,6 +187,23 @@ function(_get_git_hash)
     set(_git_short_hash "${_git_short_hash}" PARENT_SCOPE)
 endfunction()
 
+function(_get_git_author_date)
+    execute_process(
+        COMMAND
+            git log -n1 --date=format:%Y-%m%dT%H:%M:%S --format=%ad
+         WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
+        OUTPUT_VARIABLE _git_author_date
+        RESULT_VARIABLE _exit_code
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+
+    if(NOT ("${_exit_code}" EQUAL "0"))
+        message(WARNING "could not get hash git failed with exit code ${_exit_code}")
+    endif()
+
+    set(_git_author_date "${_git_author_date}" PARENT_SCOPE)
+endfunction()
+
 ## get_git_version_info
 # This function attempts to parse a version string from the most recent git tag,
 # expects tags in the form:
@@ -212,11 +231,24 @@ endfunction()
 # GIT_VERSION_MINOR
 #   Minor number extracted from git tag
 #
+# GIT_VERSION_PATCH
+#   Patch number extracted from git tag
+#
 # GIT_VERSION_BUILD
-#   Build number extracted from git tag
+#   Quad generated number containing the build type (release, beta, alpha, rc) the build number
+#   and additional commits
 #
 # GIT_VERSION_TAIL
 #   Tail extracted from git tag e.g. beta
+#
+# GIT_LONG_HASH
+#   Long hash of the last commit
+#
+# GIT_SHORT_HASH
+#   Short hash of the last commit
+#
+# GIT_AUTHOR_DATE
+#   Date of the last commit
 #
 # GIT_VER_STR
 #   A human-readable version string constructed from the parsed components.
@@ -247,6 +279,9 @@ function (get_git_version_info)
     set(_git_ver_minor 0)
     set(_git_ver_patch 0)
     set(_git_ver_tail "dev")
+
+    _get_git_hash()
+    _get_git_author_date()
 
     # get git tag
     execute_process(
@@ -283,7 +318,6 @@ function (get_git_version_info)
 
     _get_git_additional_commits("${_git_describe}")
     _git_makequad("${_git_ver_tail}" "${_git_commit_count}")
-    _get_git_hash()
 
    _export_git_version()
 endfunction()

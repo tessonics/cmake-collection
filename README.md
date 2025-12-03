@@ -50,6 +50,7 @@ any prefix will be ignored
 | BUILD_TIMESTAMP_HR  | Contains the build timestamp in a human readable format, expressed in Coordinated Universal Time (UTC).                                                                                                                                                                                |
 | GIT_LONG_HASH       | The long hash of the last commit                                                                                                                                                                                                                                                       |
 | GIT_SHORT_HASH      | The short hash of the last commit                                                                                                                                                                                                                                                      |
+| GIT_AUTHOR_DATE     | Date of the last commit                                                                                                                                                                                                                                                                |
 
 ### Example usage:
 
