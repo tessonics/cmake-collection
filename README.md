@@ -60,17 +60,17 @@ get_git_version_info()
 ```
 
 If the latest tag would be `v1.5.2-beta` and since then 10 additional commits where added the output would be the following:
-| Variable | Value |
-| ----------------- | ----------- |
-| GIT_VERSION_MAJOR | 1 |
-| GIT_VERSION_MINOR | 5 |
-| GIT_VERSION_PATCH | 2 |
-| GIT_VERSION_TAIL | beta |
-| GIT_VERSION_BUILD | 20010 |
-| GIT_VER_STR | 1-5-2-beta |
-| GIT_VER_SEM | v1.5.2-beta |
-| BUILD_TIMESTAMP_RFC | 1970-01-01T00:00:00Z |
-| BUILD_TIMESTAMP_HR | 1970-01-01 00:00:00 UTC |
+| Variable            | Value                   |
+| ------------------- | ----------------------- |
+| GIT_VERSION_MAJOR   | 1                       |
+| GIT_VERSION_MINOR   | 5                       |
+| GIT_VERSION_PATCH   | 2                       |
+| GIT_VERSION_TAIL    | beta                    |
+| GIT_VERSION_BUILD   | 20010                   |
+| GIT_VER_STR         | 1-5-2-beta              |
+| GIT_VER_SEM         | v1.5.2-beta             |
+| BUILD_TIMESTAMP_RFC | 1970-01-01T00:00:00Z    |
+| BUILD_TIMESTAMP_HR  | 1970-01-01 00:00:00 UTC |
 
 ```cmake
 include(cmake/GetGitVersion.cmake)
@@ -78,18 +78,18 @@ get_git_version_info(INCLUDE_COMMIT_COUNT)
 ```
 
 If the latest tag would be `v1.5.2-beta` and since then 10 additional commits where added the output would be the following:
-| Variable | Value |
-| ----------------- | -------------- |
-| GIT_VERSION_MAJOR | 1 |
-| GIT_VERSION_MINOR | 5 |
-| GIT_VERSION_PATCH | 2 |
-| GIT_VERSION_TAIL | beta |
-| GIT_VERSION_BUILD | 20010 |
-| GIT_COMMIT_COUNT | 10 |
-| GIT_VER_STR | 1-5-2-beta |
-| GIT_VER_SEM | v1.5.2-beta+10 |
-| BUILD_TIMESTAMP_RFC | 1970-01-01T00:00:00Z |
-| BUILD_TIMESTAMP_HR | 1970-01-01 00:00:00 UTC |
+| Variable            | Value                   |
+| ------------------- | ----------------------- |
+| GIT_VERSION_MAJOR   | 1                       |
+| GIT_VERSION_MINOR   | 5                       |
+| GIT_VERSION_PATCH   | 2                       |
+| GIT_VERSION_TAIL    | beta                    |
+| GIT_VERSION_BUILD   | 20010                   |
+| GIT_COMMIT_COUNT    | 10                      |
+| GIT_VER_STR         | 1-5-2-beta              |
+| GIT_VER_SEM         | v1.5.2-beta+10          |
+| BUILD_TIMESTAMP_RFC | 1970-01-01T00:00:00Z    |
+| BUILD_TIMESTAMP_HR  | 1970-01-01 00:00:00 UTC |
 
 ### GIT_VERSION_BUILD
 
