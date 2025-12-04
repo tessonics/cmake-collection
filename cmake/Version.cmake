@@ -48,7 +48,7 @@ function(make_version)
     if(NOT _make_version_DISABLE_INCLUDE_DIRECTORY AND _make_version_TARGET)
         target_include_directories(${_make_version_TARGET} PUBLIC "${_output_folder}")
     endif()
-    message(STATUS "${_make_version_TARGET}: product version ${GIT_VER_SEMANTIC}")
+    message(STATUS "${_make_version_TARGET}: product version ${GIT_VER_SEM}")
 endfunction()
 
 set(__CMAKE_SCRIPTS_MAKE_VERSION_FOLDER_DIR "${CMAKE_CURRENT_LIST_DIR}")
