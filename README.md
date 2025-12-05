@@ -10,6 +10,29 @@ The idea is to have a place where we can loosely collect any cmake script that c
 | [GetGitVersion](#getgitversion)     | Parses the most recent git tag                     |
 | [Version](#version)                 | Generates a version header file for a given target |
 
+## Setup
+
+To effectively use the CMake Collection it is advisable to let CMake itself fetch this repo, if you would add it as a Submodule the `AddGitSubmodule` script would be rather useless since you still need to call `git submodule update` at least once.
+
+To let CMake fetch the repo you can simply include this in your CMakeLists.txt:
+```cmake
+include(FetchContent)
+FetchContent_Declare(
+    tessonics_cmakescripts
+    GIT_REPOSITORY
+        https://github.com/tessonics/cmake-collection
+    GIT_TAG
+        v1
+)
+
+FetchContent_MakeAvailable(Tessonics_CMakeScripts)
+list(APPEND CMAKE_MODULE_PATH "${tessonics_cmakescripts_SOURCE_DIR}/cmake")
+```
+
+This will download this Repo and add it to the CMAKE_MODULE_PATH so you can simply include any of the CMake scripts by writing `include(script_name)`
+
+---
+
 ## AddGitSubmodule
 
 Adds a Git submodule directory to cmake, assumed the directory is a CMake project containing a `CMakeLists.txt`.
