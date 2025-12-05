@@ -10,13 +10,15 @@
 #   OUTPUT_FILE: filename that the generated version header file should have defaults to
 #                   ${TARGET}_version.h
 #
+#   PRODUCT_NAME: Added as a prefix to the defines in the generated version header
+#
 # Options:
 #   FORCE_RUN_GETGITVERSION - If set GetGitVersion runs whether it already run or not
 #
 #   DISABLE_INCLUDE_DIRECTORY - If set the OUTPUT_FOLDER will not be set as an include directory
 function(make_version)
-    set(options FORCE_RUN_GETGITVERSION DISABLE_INCLUDE_DIRECTORY)
-    set(oneValueArgs TARGET OUTPUT_FOLDER OUTPUT_FILE)
+    set(options "FORCE_RUN_GETGITVERSION" "DISABLE_INCLUDE_DIRECTORY")
+    set(oneValueArgs "TARGET" "OUTPUT_FOLDER" "OUTPUT_FILE" "PRODUCT_NAME")
     cmake_parse_arguments(_make_version "${options}" "${oneValueArgs}" "" ${ARGN})
 
     if(NOT GIT_VER_SEM OR _make_version_FORCE_RUN_GETGITVERSION)
@@ -38,6 +40,14 @@ function(make_version)
         set(_output_file "version.h")
     endif()
 
+    if(_make_version_PRODUCT_NAME)
+        set(PRODUCT_NAME ${_make_version_PRODUCT_NAME}_)
+    elseif(_make_version_TARGET)
+        set(PRODUCT_NAME ${_make_version_TARGET}_)
+    else()
+        unset(PRODUCT_NAME)
+    endif()
+
     message(STATUS "${_make_version_TARGET}: Generating version header")
 
     configure_file(
@@ -51,4 +61,5 @@ function(make_version)
     message(STATUS "${_make_version_TARGET}: product version ${GIT_VER_SEM}")
 endfunction()
 
+# Needed to find the pre
 set(__CMAKE_SCRIPTS_MAKE_VERSION_FOLDER_DIR "${CMAKE_CURRENT_LIST_DIR}")
