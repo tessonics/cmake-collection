@@ -25,7 +25,7 @@ macro(_export_git_version)
 
     set(GIT_AUTHOR_DATE "${_git_author_date}" PARENT_SCOPE)
 
-    if(_git_commit_count)
+    if(_git_commit_count AND _get_git_version_INCLUDE_COMMIT_COUNT)
         set(GIT_COMMIT_COUNT ${_git_commit_count} PARENT_SCOPE)
         set(GIT_VER_SEM "v${_git_ver_sem}+${_git_commit_count}" PARENT_SCOPE)
     endif()
