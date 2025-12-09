@@ -15,6 +15,7 @@ The idea is to have a place where we can loosely collect any cmake script that c
 To effectively use the CMake Collection it is advisable to let CMake itself fetch this repo, if you would add it as a Submodule the `AddGitSubmodule` script would be rather useless since you still need to call `git submodule update` at least once.
 
 To let CMake fetch the repo you can simply include this in your CMakeLists.txt:
+
 ```cmake
 include(FetchContent)
 FetchContent_Declare(
@@ -150,6 +151,7 @@ make_version(
     [DISABLE_INCLUDE_DIRECTORY]
     [OUTPUT_FOLDER path]
     [OUTPUT_FILE path]
+    [PRODUCT_NAME string]
 )
 ```
 
@@ -162,3 +164,4 @@ make_version(
 | DISABLE_INCLUDE_DIRECTORY | If set the OUTPUT_FOLDER will not be set as an include directory                                                                             |
 | OUTPUT_FOLDER             | Sets the folder to where the generated version header file will be saved defaults to `${CMAKE_CURRENT_BINARY_DIR}`                           |
 | OUTPUT_FILE               | Sets the file name for the generated version header file defaults to `${TARGET}_version.h` if a target is specified otherwise to `version.h` |
+| PRODUCT_NAME              | Added as a prefix to the defines in the generated version header                                                                             |
