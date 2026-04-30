@@ -144,6 +144,8 @@ Generates a `version.h` header file for a specific target in the `CMAKE_CURRENT_
 The `CMAKE_CURRENT_BINARY_DIR` is also added as an include_directory to the specified target.
 The file will be named default to `${TARGET}_version.h` if a target is specified otherwise to `version.h`
 
+It will fetch the Git version using [GetGitVersion](#getgitversion) (if it hasn't already). To determine whether it has already run, it checks if `GIT_VER_SEM` is defined. Setting `FORCE_RUN_GET_GITVERSION` forces the version to be fetched regardless.
+
 ```cmake
 make_version(
     [TARGET name]
@@ -165,3 +167,22 @@ make_version(
 | OUTPUT_FOLDER             | Sets the folder to where the generated version header file will be saved defaults to `${CMAKE_CURRENT_BINARY_DIR}`                           |
 | OUTPUT_FILE               | Sets the file name for the generated version header file defaults to `${TARGET}_version.h` if a target is specified otherwise to `version.h` |
 | PRODUCT_NAME              | Added as a prefix to the defines in the generated version header                                                                             |
+
+### Addition Values
+
+These values are not provided as arguments; instead, they are read from variables. And provided in the generated in the file.
+All Generated File Identifiers may also have the Produce name as the Prefix
+| Name                | Description                                                               | Generated File Identifier |
+| ------------------- | ------------------------------------------------------------------------- | ------------------------- |
+| APP_COMPANY_NAME    | Company name                                                              | PROJECTION_COMPANY_NAME   |
+| APP_COPYRIGHT       | Copyright notice                                                          | COPYRIGHT                 |
+| APP_COMPANY_URL     | Company website URL                                                       | COMPANY_URL               |
+| APP_SUPPORT_URL     | Customer support URL                                                      | SUPPORT_URL               |
+| GIT_VER_SEM         | Provided from [GetGitVersion](#getgitversion)                             | GIT_VER_SEMANTIC          |
+| GIT_VER_NNNN        | Provided from [GetGitVersion](#getgitversion) as comma-seperated integers | GIT_VER_NNNN              |
+| BUILD_TIMESTAMP_RFC | Provided from [GetGitVersion](#getgitversion)                             | BUILD_TIMESTAMP_RFC       |
+| BUILD_TIMESTAMP_HR  | Provided from [GetGitVersion](#getgitversion)                             | BUILD_TIMESTAMP_HR        |
+| GIT_AUTHOR_DATE     | Provided from [GetGitVersion](#getgitversion)                             | GIT_AUTHOR_DATE           |
+| GIT_LONG_HASH       | Provided from [GetGitVersion](#getgitversion)                             | GIT_LONG_HASH             |
+| GIT_SHORT_HASH      | Provided from [GetGitVersion](#getgitversion)                             | GIT_SHORT_HASH            |
+
