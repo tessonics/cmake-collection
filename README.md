@@ -166,7 +166,7 @@ make_version(
 | DISABLE_INCLUDE_DIRECTORY | If set the OUTPUT_FOLDER will not be set as an include directory                                                                             |
 | OUTPUT_FOLDER             | Sets the folder to where the generated version header file will be saved defaults to `${CMAKE_CURRENT_BINARY_DIR}`                           |
 | OUTPUT_FILE               | Sets the file name for the generated version header file defaults to `${TARGET}_version.h` if a target is specified otherwise to `version.h` |
-| PRODUCT_NAME              | Added as a prefix to the defines in the generated version header                                                                             |
+| PRODUCT_NAME              | Added as a prefix to the defines in the generated version header, need to follow the rules for C preprocessor defines                        |
 
 ### Addition Values
 
@@ -174,6 +174,7 @@ These values are not provided as arguments; instead, they are read from variable
 All Generated File Identifiers may also have the Produce name as the Prefix
 | Name                | Description                                                               | Generated File Identifier |
 | ------------------- | ------------------------------------------------------------------------- | ------------------------- |
+| PRODUCT_NAME        | Product name, also used as a fallback if the Argument isn't provided      | PRODUCT_NAME              |
 | APP_COMPANY_NAME    | Company name                                                              | PROJECTION_COMPANY_NAME   |
 | APP_COPYRIGHT       | Copyright notice                                                          | COPYRIGHT                 |
 | APP_COMPANY_URL     | Company website URL                                                       | COMPANY_URL               |
