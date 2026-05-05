@@ -10,7 +10,7 @@
 #   OUTPUT_FILE: filename that the generated version header file should have defaults to
 #                   ${TARGET}_version.h
 #
-#   PRODUCT_NAME: Added as a prefix to the defines in the generated version header
+#   PRODUCT_NAME: Added as a prefix to the defines in the generated version header, need to follow the rules for C preprocessor defines
 #
 # Options:
 #   FORCE_RUN_GETGITVERSION - If set GetGitVersion runs whether it already run or not
@@ -41,12 +41,16 @@ function(make_version)
     endif()
 
     if(_make_version_PRODUCT_NAME)
-        set(PRODUCT_NAME ${_make_version_PRODUCT_NAME}_)
+        set(NORMALIZED_PRODUCT_NAME ${_make_version_PRODUCT_NAME}_)
     elseif(_make_version_TARGET)
-        string(TOUPPER "${_make_version_TARGET}" PRODUCT_NAME)
-        set(PRODUCT_NAME "${PRODUCT_NAME}_")
-    else()
-        unset(PRODUCT_NAME)
+        string(TOUPPER "${_make_version_TARGET}" NORMALIZED_PRODUCT_NAME)
+        set(NORMALIZED_PRODUCT_NAME "${NORMALIZED_PRODUCT_NAME}_")
+    endif()
+
+    if(DEFINED NORMALIZED_PRODUCT_NAME)
+        if(NOT NORMALIZED_PRODUCT_NAME MATCHES "^[A-Z_][A-Z0-9_]*_$")
+            message(FATAL_ERROR "PRODUCT_NAME must be a valid C preprocessor define prefix (must start with a letter or underscore, followed by letters, digits, or underscores, and end with an underscore)")
+        endif()
     endif()
 
     message(STATUS "${_make_version_TARGET}: Generating version header")
