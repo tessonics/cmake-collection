@@ -1,11 +1,14 @@
 // DO NOT EDIT: Generated file by CMake
 
+#include <windows.h>
+#include <winver.h>
+
 1 VERSIONINFO
     FILEVERSION     @GIT_VER_NNNN@
     PRODUCTVERSION  @GIT_VER_NNNN@
-    FILEFLAGSMASK   0X3FL
+    FILEFLAGSMASK   VS_FFI_FILEFLAGSMASK
     FILEFLAGS       @_fileflags@
-    FILEOS          0X40004L
+    FILEOS          VOS_NT_WINDOWS32
     FILETYPE        @_target_type@
     FILESUBTYPE     0
 BEGIN
@@ -13,14 +16,14 @@ BEGIN
     BEGIN
         BLOCK "040904B0"
         BEGIN
-            VALUE "FileDescription", "@PRODUCT_DESCRIPTION"
+            VALUE "FileDescription", "@PRODUCT_DESCRIPTION@"
             VALUE "ProductName", "@PRODUCT_NAME@"
-            VALUE "ProductVersion", "v@GIT_VER_SEM_NO_TAIL@"
+            VALUE "ProductVersion", "@GIT_VER_SEM_NO_TAIL@"
             VALUE "LegalCopyright", "@APP_COPYRIGHT@"
         END
     END
     BLOCK "VarFileInfo"
     BEGIN
-        VALUE "Translation", 0x0409, B0
+        VALUE "Translation", 0x0409, 0x04B0
     END
 END
