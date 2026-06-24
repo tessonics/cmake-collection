@@ -1,0 +1,26 @@
+// DO NOT EDIT: Generated file by CMake
+
+1 VERSIONINFO
+    FILEVERSION     @GIT_VER_NNNN@
+    PRODUCTVERSION  @GIT_VER_NNNN@
+    FILEFLAGSMASK   0X3FL
+    FILEFLAGS       @_fileflags@
+    FILEOS          0X40004L
+    FILETYPE        @_target_type@
+    FILESUBTYPE     0
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904B0"
+        BEGIN
+            VALUE "FileDescription", "@PRODUCT_DESCRIPTION"
+            VALUE "ProductName", "@PRODUCT_NAME@"
+            VALUE "ProductVersion", "v@GIT_VER_DOT_NO_TAIL@"
+            VALUE "LegalCopyright", "@APP_COPYRIGHT@"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x0409, B0
+    END
+END
