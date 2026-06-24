@@ -4,11 +4,12 @@ A loose collection of cmake scripts used by different departments
 
 The idea is to have a place where we can loosely collect any cmake script that can be reused by any software we have or create
 
-| CMake Module                        | Description                                        |
-| ----------------------------------- | -------------------------------------------------- |
-| [AddGitSubmodule](#addgitsubmodule) | Adds a Git submodule directory to cmake            |
-| [GetGitVersion](#getgitversion)     | Parses the most recent git tag                     |
-| [Version](#version)                 | Generates a version header file for a given target |
+| CMake Module                                | Description                                        |
+| ------------------------------------------- | -------------------------------------------------- |
+| [AddGitSubmodule](#addgitsubmodule)         | Adds a Git submodule directory to cmake            |
+| [GetGitVersion](#getgitversion)             | Parses the most recent git tag                     |
+| [Version](#version)                         | Generates a version header file for a given target |
+| [MakeWindowsResource](#makewindowsresource) | Generates Windows resource file for a given target |
 
 ## Setup
 
@@ -60,22 +61,23 @@ any prefix will be ignored
 
 ### Output
 
-| Variable            | Description                                                                                                                                                                                                                                                                            |
-| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| GIT_VER_MAJOR       | Major number extracted from git tag.                                                                                                                                                                                                                                                   |
-| GIT_VER_MINOR       | Minor number extracted from git tag.                                                                                                                                                                                                                                                   |
-| GIT_VER_PATCH       | PATCH number extracted from git tag.                                                                                                                                                                                                                                                   |
-| GIT_VER_TAIL        | Tail extracted from git tag.                                                                                                                                                                                                                                                           |
-| GIT_VER_BUILD       | Quad build number derived from git tail see [GIT_VERSION_BUILD](#GIT_VERSION_BUILD)                                                                                                                                                                                                    |
-| GIT_VER_STR         | Human readable version string constructed from the parsed components, compounded with a `-` Format: `<major>-<minor>-<patch>[-<tail>]`.                                                                                                                                                |
-| GIT_VER_SEM         | A semantic version compatible version string constructed from the parsed components, compound with a `.`.<br>If `INCLUDE_COMMIT_COUNT` is enabled the version string will also contain the number of additional commits. Format: `v<major>.<minor>.<patch>[-<tail>][+<commit_count>]`. |
-| GIT_COMMIT_COUNT    | Contains the additional commits since the last version tag. Only set if called with the OPTION `INCLUDE_COMMIT_COUNT` and the number of additional commits is greater then 0.                                                                                                          |
-| GIT_VER_NNNN        | Contains the Major Minor Patch Build as a comma separated string                                                                                                                                                                                                                       |
-| BUILD_TIMESTAMP_RFC | Contains the build timestamp in RFC-3339 format, expressed in Coordinated Universal Time (UTC).                                                                                                                                                                                        |
-| BUILD_TIMESTAMP_HR  | Contains the build timestamp in a human readable format, expressed in Coordinated Universal Time (UTC).                                                                                                                                                                                |
-| GIT_LONG_HASH       | The long hash of the last commit                                                                                                                                                                                                                                                       |
-| GIT_SHORT_HASH      | The short hash of the last commit                                                                                                                                                                                                                                                      |
-| GIT_AUTHOR_DATE     | Date of the last commit                                                                                                                                                                                                                                                                |
+| Variable            | Description                                                                                                                                                                                                                                                                             |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| GIT_VER_MAJOR       | Major number extracted from git tag.                                                                                                                                                                                                                                                    |
+| GIT_VER_MINOR       | Minor number extracted from git tag.                                                                                                                                                                                                                                                    |
+| GIT_VER_PATCH       | PATCH number extracted from git tag.                                                                                                                                                                                                                                                    |
+| GIT_VER_TAIL        | Tail extracted from git tag.                                                                                                                                                                                                                                                            |
+| GIT_VER_BUILD       | Quad build number derived from git tail see [GIT_VERSION_BUILD](#GIT_VERSION_BUILD)                                                                                                                                                                                                     |
+| GIT_VER_STR         | Human readable version string constructed from the parsed components, compounded with a `-` Format: `<major>-<minor>-<patch>[-<tail>]`.                                                                                                                                                 |
+| GIT_VER_SEM         | A semantic version compatible version string constructed from the parsed components, compound with a `.`.<br>If `INCLUDE_COMMIT_COUNT` is enabled the version string will also contain the number of additional commits. Format: `v<major>.<minor>.<patch>[-<tail>][+<commit_count>]`.  |
+| GIT_VER_SEM_NO_TAIL | A semantic version compatible version string constructed from the parsed components, compound with a `.`. This version does not include the tail, and is useful for cases where a semantic version is required without any pre-release identifiers. format: `v<major>.<minor>.<patch>`. |
+| GIT_COMMIT_COUNT    | Contains the additional commits since the last version tag. Only set if called with the OPTION `INCLUDE_COMMIT_COUNT` and the number of additional commits is greater then 0.                                                                                                           |
+| GIT_VER_NNNN        | Contains the Major Minor Patch Build as a comma separated string                                                                                                                                                                                                                        |
+| BUILD_TIMESTAMP_RFC | Contains the build timestamp in RFC-3339 format, expressed in Coordinated Universal Time (UTC).                                                                                                                                                                                         |
+| BUILD_TIMESTAMP_HR  | Contains the build timestamp in a human readable format, expressed in Coordinated Universal Time (UTC).                                                                                                                                                                                 |
+| GIT_LONG_HASH       | The long hash of the last commit                                                                                                                                                                                                                                                        |
+| GIT_SHORT_HASH      | The short hash of the last commit                                                                                                                                                                                                                                                       |
+| GIT_AUTHOR_DATE     | Date of the last commit                                                                                                                                                                                                                                                                 |
 
 ### Example usage:
 
@@ -172,18 +174,51 @@ make_version(
 
 These values are not provided as arguments; instead, they are read from variables. And provided in the generated in the file.
 All Generated File Identifiers may also have the Produce name as the Prefix
-| Name                | Description                                                               | Generated File Identifier |
+| Name | Description | Generated File Identifier |
 | ------------------- | ------------------------------------------------------------------------- | ------------------------- |
-| PRODUCT_NAME        | Product name, also used as a fallback if the Argument isn't provided      | PRODUCT_NAME              |
-| APP_COMPANY_NAME    | Company name                                                              | PROJECTION_COMPANY_NAME   |
-| APP_COPYRIGHT       | Copyright notice                                                          | COPYRIGHT                 |
-| APP_COMPANY_URL     | Company website URL                                                       | COMPANY_URL               |
-| APP_SUPPORT_URL     | Customer support URL                                                      | SUPPORT_URL               |
-| GIT_VER_SEM         | Provided from [GetGitVersion](#getgitversion)                             | GIT_VER_SEMANTIC          |
-| GIT_VER_NNNN        | Provided from [GetGitVersion](#getgitversion) as comma-seperated integers | GIT_VER_NNNN              |
-| BUILD_TIMESTAMP_RFC | Provided from [GetGitVersion](#getgitversion)                             | BUILD_TIMESTAMP_RFC       |
-| BUILD_TIMESTAMP_HR  | Provided from [GetGitVersion](#getgitversion)                             | BUILD_TIMESTAMP_HR        |
-| GIT_AUTHOR_DATE     | Provided from [GetGitVersion](#getgitversion)                             | GIT_AUTHOR_DATE           |
-| GIT_LONG_HASH       | Provided from [GetGitVersion](#getgitversion)                             | GIT_LONG_HASH             |
-| GIT_SHORT_HASH      | Provided from [GetGitVersion](#getgitversion)                             | GIT_SHORT_HASH            |
+| PRODUCT_NAME | Product name, also used as a fallback if the Argument isn't provided | PRODUCT_NAME |
+| APP_COMPANY_NAME | Company name | PROJECTION_COMPANY_NAME |
+| APP_COPYRIGHT | Copyright notice | COPYRIGHT |
+| APP_COMPANY_URL | Company website URL | COMPANY_URL |
+| APP_SUPPORT_URL | Customer support URL | SUPPORT_URL |
+| GIT_VER_SEM | Provided from [GetGitVersion](#getgitversion) | GIT_VER_SEMANTIC |
+| GIT_VER_NNNN | Provided from [GetGitVersion](#getgitversion) as comma-seperated integers | GIT_VER_NNNN |
+| BUILD_TIMESTAMP_RFC | Provided from [GetGitVersion](#getgitversion) | BUILD_TIMESTAMP_RFC |
+| BUILD_TIMESTAMP_HR | Provided from [GetGitVersion](#getgitversion) | BUILD_TIMESTAMP_HR |
+| GIT_AUTHOR_DATE | Provided from [GetGitVersion](#getgitversion) | GIT_AUTHOR_DATE |
+| GIT_LONG_HASH | Provided from [GetGitVersion](#getgitversion) | GIT_LONG_HASH |
+| GIT_SHORT_HASH | Provided from [GetGitVersion](#getgitversion) | GIT_SHORT_HASH |
 
+## MakeWindowsResource
+
+Create a `windows.rc` file for a specified target inside the `CMAKE_CURRENT_BINARY_DIR` directory. The generate file is then added directly as a source to the target so that, during the build process, the embedded resource information is included in the resulting binary.
+
+it will retrieves the Git version via [GetGitVersion](#getgitversion) (if it has not already been obtained). The function checks whether `GIT_VER_SEM` is defined to determine if it has already run. To override this behavior and force a version refresh, set `FORCE_RUN_GET_GITVERSION`-
+
+```cmake
+make_windows_rc(
+    TARGET name
+    [FORCE_RUN_GET_GITVERSION]
+    [OUTPUT_FOLDER path]
+    [OUTPUT_FILE path]
+)
+```
+
+### Arguments
+| Parameter                | Description                                                                                                         |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------- |
+| TARGET                   | The TARGET for which the resource file will be generated                                                            |
+| FORCE_RUN_GET_GITVERSION | If set, forces `GetGitVersion` to run even if it has already been executed                                          |
+| OUTPUT_FOLDER            | Specifies the directory where the generated resource file will be placed. Defaults to `${CMAKE_CURRENT_BINARY_DIR}` |
+| OUTPUT_FILE              | Specifies the name of the generated resource file. Defaults to `${TARGET}.rc`                                       |
+
+### Additional Values
+These values are not passed as function arguments; instead, they are read from variables and used when generating the file.
+| Name | Description |
+| ------------------- | -------------------------------------------------------------------------------------------------------- |
+| PRODUCT_NAME | The product name displayed in the resource information |
+| PRODUCT_DESCRIPTION | The product description displayed in the resource information |
+| APP_COPYRIGHT | The copyright notice displayed in the resource information |
+| GIT_VER_NNNN | Provided by [GetGitVersion](#getgitversion) as comma-separated integers used in the resource information |
+| GIT_VER_SEM | Provided by [GetGitVersion](#getgitversion) and shown in the resource information |
+| GIT_VER_BUILD | Provided by [GetGitVersion](#getgitversion) and used to determine file flags |

@@ -5,12 +5,14 @@ find_package(Git REQUIRED)
 macro(_export_git_version)
     string(JOIN "-" _git_ver_str ${_git_ver_major} ${_git_ver_minor} ${_git_ver_patch} ${_git_ver_tail})
     string(JOIN "." _git_ver_sem ${_git_ver_major} ${_git_ver_minor} ${_git_ver_patch})
-    string(JOIN "-" _git_ver_sem ${_git_ver_sem} ${_git_ver_tail})
+    string(JOIN "-" _git_ver_sem_tail ${_git_ver_sem} ${_git_ver_tail})
     string(JOIN "," _git_ver_nnnn ${_git_ver_major} ${_git_ver_minor} ${_git_ver_patch} ${_git_ver_build})
+    string(JOIN "." _git_ver_dot_no_tail ${_git_ver_major} ${_git_ver_minor} ${_git_ver_patch})
     string(TIMESTAMP _build_timestamp_rfc UTC)
     string(TIMESTAMP _build_timestamp_hr "%Y-%m-%d %H:%M:%S UTC" UTC)
 
-    set(GIT_VER_SEM "v${_git_ver_sem}" PARENT_SCOPE)
+    set(GIT_VER_SEM "v${_git_ver_sem_tail}" PARENT_SCOPE)
+    set(GIT_VER_SEM_NO_TAIL "v${_git_ver_sem}" PARENT_SCOPE)
     set(GIT_VER_STR "${_git_ver_str}" PARENT_SCOPE)
 
     set(GIT_VER_MAJOR ${_git_ver_major} PARENT_SCOPE)
@@ -19,6 +21,7 @@ macro(_export_git_version)
     set(GIT_VER_TAIL "${_git_ver_tail}" PARENT_SCOPE)
     set(GIT_VER_BUILD "${_git_ver_build}" PARENT_SCOPE)
     set(GIT_VER_NNNN "${_git_ver_nnnn}" PARENT_SCOPE)
+    set(GIT_VER_DOT_NO_TAIL "${_git_ver_dot_no_tail}" PARENT_SCOPE)
 
     set(GIT_LONG_HASH "${_git_long_hash}" PARENT_SCOPE)
     set(GIT_SHORT_HASH "${_git_short_hash}" PARENT_SCOPE)
@@ -27,13 +30,14 @@ macro(_export_git_version)
 
     if(_git_commit_count AND _get_git_version_INCLUDE_COMMIT_COUNT)
         set(GIT_COMMIT_COUNT ${_git_commit_count} PARENT_SCOPE)
-        set(GIT_VER_SEM "v${_git_ver_sem}+${_git_commit_count}" PARENT_SCOPE)
+        set(GIT_VER_SEM "v${_git_ver_sem_tail}+${_git_commit_count}" PARENT_SCOPE)
     endif()
 
     set(BUILD_TIMESTAMP_RFC ${_build_timestamp_rfc} PARENT_SCOPE)
     set(BUILD_TIMESTAMP_HR ${_build_timestamp_hr} PARENT_SCOPE)
 
-    message(VERBOSE "GIT_VER_SEM: ${_git_ver_sem}")
+    message(VERBOSE "GIT_VER_SEM: ${_git_ver_sem_tail}")
+    message(VERBOSE "GIT_VER_SEM_NO_TAIL: ${_git_ver_sem}")
     message(VERBOSE "GIT_VER_STR: ${_git_ver_str}")
 
     message(VERBOSE "GIT_VER_MAJOR: ${_git_ver_major}")
@@ -262,7 +266,14 @@ endfunction()
 #   When `INCLUDE_COMMIT_COUNT` is enabled and a commit count is available the semantic string
 #   included a build-metadata suffix
 #   Format:
-#      <major>-<minor>-<patch>[-<tail>][+<commit_count>]
+#      <major>.<minor>.<patch>[-<tail>][+<commit_count>]
+#
+# GIT_VER_SEM_NO_TAIL
+#   A semantic version compatible version string constructed from the parsed components.
+#   This version string does not include the tail, and is useful for cases where a semantic version
+#   is required without any pre-release identifiers.
+#   Format:
+#      <major>.<minor>.<patch>
 #
 # GIT_COMMIT_COUNT
 #   number of the commits since the last version tag, only set with the option INCLUDE_COMMIT_COUNT

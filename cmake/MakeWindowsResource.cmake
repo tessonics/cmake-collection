@@ -1,0 +1,83 @@
+## make_windows_rc
+# This function generates a Windows resource file for a specified target. To embed information in the generated binary.
+#
+# Arguments:
+#   TARGET (REQUIRED): The name of the target for which the Windows resource file should be generated.
+#   OUTPUT_FOLDER: folder to where the generated Windows resource file should be saved defaults to defaults to
+#                   ${CMAKE_CURRENT_BINARY_DIR}
+#   OUTPUT_FILE: filename that the generated Windows resource file should have defaults to ${TARGET}.rc
+#
+# Options:
+#   FORCE_RUN_GETGITVERSION - If set GetGitVersion runs whether it already run or not
+#
+function(make_windows_rc)
+    set(options "FORCE_RUN_GETGITVERSION")
+    set(oneValueArgs "TARGET" "OUTPUT_FOLDER" "OUTPUT_FILE")
+    cmake_parse_arguments(_make_windows_rc "${options}" "${oneValueArgs}" "" ${ARGN})
+
+    if(NOT _make_windows_rc_TARGET)
+        message(FATAL_ERROR "make_windows_rc(): TARGET is required")
+    endif()
+
+    if(NOT GIT_VER_SEM OR _make_windows_rc_FORCE_RUN_GETGITVERSION)
+        include(GetGitVersion)
+        get_git_version_info()
+    endif()
+
+    if(_make_windows_rc_OUTPUT_FOLDER)
+        set(_output_folder "${_make_windows_rc_OUTPUT_FOLDER}")
+    else()
+        set(_output_folder "${CMAKE_CURRENT_BINARY_DIR}")
+    endif()
+
+    if(_make_windows_rc_OUTPUT_FILE)
+        set(_output_file "${_make_windows_rc_OUTPUT_FILE}")
+    else()
+        set(_output_file "${_make_windows_rc_TARGET}.rc")
+    endif()
+
+    set(_target_name "${_make_windows_rc_TARGET}")
+    get_target_property(_target_output_name "${_make_windows_rc_TARGET}" OUTPUT_NAME)
+    if(_target_output_name)
+        set(_target_filename "${_target_output_name}")
+    else()
+        set(_target_filename "${_make_windows_rc_TARGET}")
+    endif()
+
+    get_target_property(_target_type "${_make_windows_rc_TARGET}" TYPE)
+    if(_target_type STREQUAL "EXECUTABLE")
+        set(_target_type "VFT_APP")
+        set(_target_filename "${_target_filename}.exe")
+    elseif(_target_type STREQUAL "STATIC_LIBRARY")
+        set(_target_type "VFT_STATIC_LIB")
+        set(_target_filename "${_target_filename}.lib")
+    elseif(_target_type STREQUAL "SHARED_LIBRARY")
+        set(_target_type "VFT_DLL")
+        set(_target_filename "${_target_filename}.dll")
+    else()
+        message(FATAL_ERROR "Cannot generate Windows resource file for target type: ${_target_type}")
+    endif()
+
+    if(GIT_VER_BUILD MATCHES "^5")
+        set(_fileflags 0) # No flag for release builds
+    else()
+        set(_fileflags "VS_FF_PRERELEASE")
+        # could use  VS_FF_PRIVATEBUILD & VS_FF_SPECIALBUILD for alpha / beta but would need to add a way to set the Info Strings
+    endif()
+
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug") # Works only for single-config generators
+        set(_fileflags "${_fileflags} | VS_FF_DEBUG")
+    endif()
+
+    message(STATUS "${_make_windows_rc_TARGET}: Generating Windows resource file")
+    configure_file(
+        "${__CMAKE_SCRIPTS_MAKE_VERSION_FOLDER_DIR}/../windows.rc.in"
+        "${_output_folder}/${_output_file}"
+    )
+
+    message(STATUS "${_make_windows_rc_TARGET}: Adding Windows resource file to target sources")
+    target_sources(${_make_windows_rc_TARGET} PRIVATE "${_output_folder}/${_output_file}")
+endfunction()
+
+# Need to set the variable when the cmake file gets first loaded, so that the configure_file() calls in the functions above can find the .in files.
+set(__CMAKE_SCRIPTS_MAKE_VERSION_FOLDER_DIR "${CMAKE_CURRENT_LIST_DIR}")
