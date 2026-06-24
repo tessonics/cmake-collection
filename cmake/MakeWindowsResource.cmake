@@ -1,3 +1,15 @@
+## make_windows_rc
+# This function generates a Windows resource file for a specified target. To embed information in the generated binary.
+#
+# Arguments:
+#   TARGET (REQUIRED): The name of the target for which the Windows resource file should be generated.
+#   OUTPUT_FOLDER: folder to where the generated Windows resource file should be saved defaults to defaults to
+#                   ${CMAKE_CURRENT_BINARY_DIR}
+#   OUTPUT_FILE: filename that the generated Windows resource file should have defaults to ${TARGET}.rc
+#
+# Options:
+#   FORCE_RUN_GETGITVERSION - If set GetGitVersion runs whether it already run or not
+#
 function(make_windows_rc)
     set(options "FORCE_RUN_GETGITVERSION")
     set(oneValueArgs "TARGET" "OUTPUT_FOLDER" "OUTPUT_FILE")
@@ -20,10 +32,8 @@ function(make_windows_rc)
 
     if(_make_windows_rc_OUTPUT_FILE)
         set(_output_file "${_make_windows_rc_OUTPUT_FILE}")
-    elseif(_make_windows_rc_TARGET)
-        set(_output_file "${_make_windows_rc_TARGET}.rc")
     else()
-        set(_output_file "windows.rc")
+        set(_output_file "${_make_windows_rc_TARGET}.rc")
     endif()
 
     set(_target_name "${_make_windows_rc_TARGET}")

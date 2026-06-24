@@ -4,11 +4,12 @@ A loose collection of cmake scripts used by different departments
 
 The idea is to have a place where we can loosely collect any cmake script that can be reused by any software we have or create
 
-| CMake Module                        | Description                                        |
-| ----------------------------------- | -------------------------------------------------- |
-| [AddGitSubmodule](#addgitsubmodule) | Adds a Git submodule directory to cmake            |
-| [GetGitVersion](#getgitversion)     | Parses the most recent git tag                     |
-| [Version](#version)                 | Generates a version header file for a given target |
+| CMake Module                                | Description                                        |
+| ------------------------------------------- | -------------------------------------------------- |
+| [AddGitSubmodule](#addgitsubmodule)         | Adds a Git submodule directory to cmake            |
+| [GetGitVersion](#getgitversion)             | Parses the most recent git tag                     |
+| [Version](#version)                         | Generates a version header file for a given target |
+| [MakeWindowsResource](#makewindowsresource) | Generates Windows resource file for a given target |
 
 ## Setup
 
@@ -187,3 +188,37 @@ All Generated File Identifiers may also have the Produce name as the Prefix
 | GIT_AUTHOR_DATE | Provided from [GetGitVersion](#getgitversion) | GIT_AUTHOR_DATE |
 | GIT_LONG_HASH | Provided from [GetGitVersion](#getgitversion) | GIT_LONG_HASH |
 | GIT_SHORT_HASH | Provided from [GetGitVersion](#getgitversion) | GIT_SHORT_HASH |
+
+## MakeWindowsResource
+
+Create a `windows.rc` file for a specified target inside the `CMAKE_CURRENT_BINARY_DIR` directory. The generate file is then added directly as a source to the target so that, during the build process, the embedded resource information is included in the resulting binary.
+
+it will retrieves the Git version via [GetGitVersion](#getgitversion) (if it has not already been obtained). The function checks whether `GIT_VER_SEM` is defined to determine if it has already run. To override this behavior and force a version refresh, set `FORCE_RUN_GET_GITVERSION`-
+
+```cmake
+make_windows_rc(
+    TARGET name
+    [FORCE_RUN_GET_GITVERSION]
+    [OUTPUT_FOLDER path]
+    [OUTPUT_FILE path]
+)
+```
+
+### Arguments
+| Parameter                | Description                                                                                                         |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------- |
+| TARGET                   | The TARGET for which the resource file will be generated                                                            |
+| FORCE_RUN_GET_GITVERSION | If set, forces `GetGitVersion` to run even if it has already been executed                                          |
+| OUTPUT_FOLDER            | Specifies the directory where the generated resource file will be placed. Defaults to `${CMAKE_CURRENT_BINARY_DIR}` |
+| OUTPUT_FILE              | Specifies the name of the generated resource file. Defaults to `${TARGET}.rc`                                       |
+
+### Additional Values
+These values are not passed as function arguments; instead, they are read from variables and used when generating the file.
+| Name | Description |
+| ------------------- | -------------------------------------------------------------------------------------------------------- |
+| PRODUCT_NAME | The product name displayed in the resource information |
+| PRODUCT_DESCRIPTION | The product description displayed in the resource information |
+| APP_COPYRIGHT | The copyright notice displayed in the resource information |
+| GIT_VER_NNNN | Provided by [GetGitVersion](#getgitversion) as comma-separated integers used in the resource information |
+| GIT_VER_SEM | Provided by [GetGitVersion](#getgitversion) and shown in the resource information |
+| GIT_VER_BUILD | Provided by [GetGitVersion](#getgitversion) and used to determine file flags |
