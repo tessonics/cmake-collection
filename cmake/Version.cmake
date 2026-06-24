@@ -66,5 +66,5 @@ function(make_version)
     message(STATUS "${_make_version_TARGET}: product version ${GIT_VER_SEM}")
 endfunction()
 
-# Needed to find the pre
+# Need to set the variable when the cmake file gets first loaded, so that the configure_file() calls in the functions above can find the .in files.
 set(__CMAKE_SCRIPTS_MAKE_VERSION_FOLDER_DIR "${CMAKE_CURRENT_LIST_DIR}")

@@ -15,7 +15,7 @@ BEGIN
         BEGIN
             VALUE "FileDescription", "@PRODUCT_DESCRIPTION"
             VALUE "ProductName", "@PRODUCT_NAME@"
-            VALUE "ProductVersion", "v@GIT_VER_DOT_NO_TAIL@"
+            VALUE "ProductVersion", "v@GIT_VER_SEM_NO_TAIL@"
             VALUE "LegalCopyright", "@APP_COPYRIGHT@"
         END
     END
