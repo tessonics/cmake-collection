@@ -65,6 +65,8 @@ function(make_windows_rc)
         "${_output_folder}/${_output_file}"
     )
 
+    message(STATUS "${_make_windows_rc_TARGET}: Adding Windows resource file to target sources")
+    target_sources(${_make_windows_rc_TARGET} PRIVATE "${_output_folder}/${_output_file}")
 endfunction()
 
 # Need to set the variable when the cmake file gets first loaded, so that the configure_file() calls in the functions above can find the .in files.
