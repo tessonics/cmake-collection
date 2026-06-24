@@ -55,7 +55,7 @@ function(make_windows_rc)
         # could use  VS_FF_PRIVATEBUILD & VS_FF_SPECIALBUILD for alpha / beta but would need to add a way to set the Info Strings
     endif()
 
-    if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_CONFIGURATION_TYPES)
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug") # Works only for single-config generators
         set(_fileflags "${_fileflags} | VS_FF_DEBUG")
     endif()
 
