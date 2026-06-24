@@ -3,6 +3,10 @@ function(make_windows_rc)
     set(oneValueArgs "TARGET" "OUTPUT_FOLDER" "OUTPUT_FILE")
     cmake_parse_arguments(_make_windows_rc "${options}" "${oneValueArgs}" "" ${ARGN})
 
+    if(NOT _make_windows_rc_TARGET)
+        message(FATAL_ERROR "make_windows_rc(): TARGET is required")
+    endif()
+
     if(NOT GIT_VER_SEM OR _make_windows_rc_FORCE_RUN_GETGITVERSION)
         include(GetGitVersion)
         get_git_version_info()
@@ -22,15 +26,24 @@ function(make_windows_rc)
         set(_output_file "windows.rc")
     endif()
 
-    message(STATUS "${_make_windows_rc_TARGET}: Generating Windows resource file")
+    set(_target_name "${_make_windows_rc_TARGET}")
+    get_target_property(_target_output_name "${_make_windows_rc_TARGET}" OUTPUT_NAME)
+    if(_target_output_name)
+        set(_target_filename "${_target_output_name}")
+    else()
+        set(_target_filename "${_make_windows_rc_TARGET}")
+    endif()
 
     get_target_property(_target_type "${_make_windows_rc_TARGET}" TYPE)
     if(_target_type STREQUAL "EXECUTABLE")
         set(_target_type "VFT_APP")
+        set(_target_filename "${_target_filename}.exe")
     elseif(_target_type STREQUAL "STATIC_LIBRARY")
-        set(_target_type " VFT_STATIC_LIB")
+        set(_target_type "VFT_STATIC_LIB")
+        set(_target_filename "${_target_filename}.lib")
     elseif(_target_type STREQUAL "SHARED_LIBRARY")
         set(_target_type "VFT_DLL")
+        set(_target_filename "${_target_filename}.dll")
     else()
         message(FATAL_ERROR "Cannot generate Windows resource file for target type: ${_target_type}")
     endif()
@@ -42,11 +55,11 @@ function(make_windows_rc)
         # could use  VS_FF_PRIVATEBUILD & VS_FF_SPECIALBUILD for alpha / beta but would need to add a way to set the Info Strings
     endif()
 
-    if(_DEBUG)
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_CONFIGURATION_TYPES)
         set(_fileflags "${_fileflags} | VS_FF_DEBUG")
     endif()
 
-
+    message(STATUS "${_make_windows_rc_TARGET}: Generating Windows resource file")
     configure_file(
         "${__CMAKE_SCRIPTS_MAKE_VERSION_FOLDER_DIR}/../windows.rc.in"
         "${_output_folder}/${_output_file}"

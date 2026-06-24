@@ -18,8 +18,10 @@ BEGIN
         BEGIN
             VALUE "FileDescription", "@PRODUCT_DESCRIPTION@"
             VALUE "ProductName", "@PRODUCT_NAME@"
-            VALUE "ProductVersion", "@GIT_VER_SEM_NO_TAIL@"
+            VALUE "ProductVersion", "@GIT_VER_SEM@"
             VALUE "LegalCopyright", "@APP_COPYRIGHT@"
+            VALUE "InternalName", "@_target_name@"
+            VALUE "OriginalFilename", "@_target_filename@"
         END
     END
     BLOCK "VarFileInfo"
