@@ -58,6 +58,28 @@ function(make_windows_rc)
         message(FATAL_ERROR "Cannot generate Windows resource file for target type: ${_target_type}")
     endif()
 
+    if(PRODUCT_ICON)
+        if(IS_ABSOLUTE "${PRODUCT_ICON}")
+            set(_product_icon_path "${PRODUCT_ICON}")
+        else()
+            cmake_path(ABSOLUTE_PATH "PRODUCT_ICON"
+                    BASE_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+                    OUTPUT_VARIABLE "_product_icon_path")
+        endif()
+
+        cmake_path(NORMAL_PATH "_product_icon_path" OUTPUT_VARIABLE "_product_icon_path")
+
+        if(NOT EXISTS "${_product_icon_path}")
+            message(FATAL_ERROR "Product icon file does not exist: ${_product_icon_path}")
+        endif()
+
+        if(IS_DIRECTORY  "${_product_icon_path}")
+            message(FATAL_ERROR "Product icon file is a directory: ${_product_icon_path}")
+        endif()
+
+        set(_rc_idi_icon1 "IDI_ICON1 ICON \"${_product_icon_path}\"")
+    endif()
+
     if(GIT_VER_BUILD MATCHES "^5")
         set(_fileflags 0) # No flag for release builds
     else()
