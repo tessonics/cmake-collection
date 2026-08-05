@@ -218,6 +218,7 @@ These values are not passed as function arguments; instead, they are read from v
 | ------------------- | -------------------------------------------------------------------------------------------------------- |
 | PRODUCT_NAME | The product name displayed in the resource information |
 | PRODUCT_DESCRIPTION | The product description displayed in the resource information |
+| PRODUCT_ICON | Path to the icon the executable should have |
 | APP_COPYRIGHT | The copyright notice displayed in the resource information |
 | GIT_VER_NNNN | Provided by [GetGitVersion](#getgitversion) as comma-separated integers used in the resource information |
 | GIT_VER_SEM | Provided by [GetGitVersion](#getgitversion) and shown in the resource information |
